@@ -21,6 +21,22 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
+        volumeMounts:
+        - name: pv-backend 
+          mountPath: /app
         env:
         - name: DATABASE_URL
-          value: "mongodb://10.107.90.71:27017"
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-backend
+              key: database-url
+        - name: logging
+          valueFrom:
+            configMapKeyRef:
+              name: configmap-backend
+              key: logging
+      volumes:
+      - name: pv-backend 
+        persistentVolumeClaim:
+          claimName: pv-backend-claim
+
